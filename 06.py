@@ -1,5 +1,5 @@
 # cd Documents/Waseda3rdYear/ProjectResearchB/slack_api
-# python3 test.py
+# python3 06.py
 
 import cv2
 from datetime import datetime
@@ -36,10 +36,15 @@ class SlackDriver:
         params = {"token": self._token, "channel": channel, "text": message}
 
         r = requests.post('https://slack.com/api/chat.postMessage',
-                          headers=self._headers,
-                          params=params)
+                          headers=self._headers, params=params)
 
         # print("return ", r.json())
+
+    def change_status(self, status):
+        params = {"token": self._token, "channel": channel, "text": message}
+
+        r = requests.post('https://slack.com/api/users.profile.set',
+                          headers=self._headers, params=params)
 
 
 def cpture_save():
