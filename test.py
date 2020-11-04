@@ -17,6 +17,7 @@ load_dotenv()
 
 # client = WebClient(token=os.environ['SLACK_OAUTH_TOKEN'])
 slack_oauth_token = os.environ['SLACK_OAUTH_TOKEN']
+slack_user_token = os.environ['SLACK_USER_TOKEN']
 user_id = os.environ['USER_ID']
 
 
@@ -26,23 +27,40 @@ class SlackDriver:
         self._token = _token
         self._headers = {'Content-Type': 'application/json'}
 
-    def change_status(self, text, emoji):
+    def send_option(self):
+        icon_emoji = ':robot_face:'
+        callback_id = 'status_show_all'
+        attachments = [{
+            'text': 'Show status of ...',
+            'callback_id': callback_id,
+            'color': '#EE2222',
+            'attachment_type': 'default',
+            'actions': [{
+                'name': 'all',
+                'text': 'ALL',
+                'type': 'button'
+            },
+                {
+                'name': 'self',
+                'text': 'YOU',
+                'type': 'button'
+            }]
+        }]
+
         data = {
-            "token": os.environ['SLACK_OAUTH_TOKEN'],
-            # "user": user_id,
-            "profile": json.dumps({
-                "status_text": text,
-                "status_emoji": emoji
-            })
+            'token': token,
+            'channel': 'C01CRGA8QK0',
+            'username': 'me',
+            'icon_emoji': icon_emoji,
+            'attachments': json.dumps(attachments)
         }
-        print(data)
 
         r = requests.post(
-            'https://slack.com/api/users.profile.set', params=data)
+            'https://slack.com/api/chat.postMessage', params=data)
         print(r.text)
 
 
 if __name__ == '__main__':
-    token = slack_oauth_token
+    token = slack_user_token
     slack = SlackDriver(token)
-    slack.change_status("hello from 'test.py'", ':smile:')
+    slack.send_option()

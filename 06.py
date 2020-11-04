@@ -24,6 +24,7 @@ load_dotenv()
 # client = SlackClient(slack_token)
 # client = WebClient(token=os.environ['SLACK_USER_TOKEN'])
 slack_oauth_token = os.environ['SLACK_OAUTH_TOKEN']
+slack_user_token = os.environ['SLACK_USER_TOKEN']
 user_id = os.environ['USER_ID']
 
 face_detector = dlib.get_frontal_face_detector()
@@ -33,21 +34,23 @@ face_predictor = dlib.shape_predictor(predictor_path)
 
 class SlackDriver:
 
-    def __init__(self, _token):
-        self._token = _token  # api_token
+    def __init__(self, _oauth_token, _user_token):
+        self._oauth_token = _oauth_token  # api_token
+        self._user_token = _user_token
         self._headers = {'Content-Type': 'application/json'}
 
     def send_message(self, message, channel):
-        params = {"token": self._token, "channel": channel, "text": message}
+        params = {"token": self._user_token,
+                  "channel": channel, "text": message}
 
         r = requests.post('https://slack.com/api/chat.postMessage',
                           headers=self._headers, params=params)
 
-        # print("return ", r.json())
+        # print(r.text)
 
     def change_status(self, text, emoji):
         params = {
-            "token": self._token,
+            "token": self._oauth_token,
             # "user": user_id,
             "profile": json.dumps({
                 "status_text": text,
@@ -122,7 +125,6 @@ def detected_active(date):
 
 
 if __name__ == '__main__':
-    token = slack_oauth_token
-    slack = SlackDriver(token)
+    slack = SlackDriver(slack_oauth_token, slack_user_token)
 
     cpture()
