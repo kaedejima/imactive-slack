@@ -63,6 +63,36 @@ class SlackDriver:
             'https://slack.com/api/users.profile.set', params=params)
         # print(r.text)
 
+    def send_button(self):
+        callback_id = 'status_show_all'
+        attachments = [{
+            'text': 'Show status of ...',
+            'callback_id': callback_id,
+            'color': '#EE2222',
+            'attachment_type': 'default',
+            'actions': [{
+                'name': 'all',
+                'text': 'ALL',
+                'type': 'button'
+            },
+                {
+                'name': 'self',
+                'text': 'YOU',
+                'type': 'button'
+            }]
+        }]
+
+        data = {
+            'token': self._user_token,
+            'channel': 'C01CRGA8QK0',
+            'username': 'me',
+            'attachments': json.dumps(attachments)
+        }
+
+        r = requests.post(
+            'https://slack.com/api/chat.postMessage', params=data)
+        print(r.text)
+
 
 def cpture():
     cap = cv2.VideoCapture(0)
@@ -126,5 +156,5 @@ def detected_active(date):
 
 if __name__ == '__main__':
     slack = SlackDriver(slack_oauth_token, slack_user_token)
-
-    cpture()
+    slack.send_button()
+    # cpture()
