@@ -28,7 +28,6 @@ class SlackDriver:
         self._headers = {'Content-Type': 'application/json'}
 
     def send_option(self):
-        icon_emoji = ':robot_face:'
         callback_id = 'status_show_all'
         attachments = [{
             'text': 'Show status of ...',
@@ -51,7 +50,6 @@ class SlackDriver:
             'token': token,
             'channel': 'C01CRGA8QK0',
             'username': 'me',
-            'icon_emoji': icon_emoji,
             'attachments': json.dumps(attachments)
         }
 

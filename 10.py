@@ -1,6 +1,6 @@
 # RUN FROM TERMINAL
 # cd Documents/Waseda3rdYear/ProjectResearchB/slack_api
-# python3 06.py
+# python3 10.py
 
 import cv2
 from datetime import datetime
@@ -21,7 +21,7 @@ load_dotenv()
 
 slack_oauth_token = os.environ['SLACK_OAUTH_TOKEN']
 slack_user_token = os.environ['SLACK_USER_TOKEN']
-# user_id = os.environ['USER_ID']
+user_id = os.environ['USER_ID']
 
 face_detector = dlib.get_frontal_face_detector()
 predictor_path = 'shape_predictor_68_face_landmarks.dat'
@@ -29,7 +29,6 @@ face_predictor = dlib.shape_predictor(predictor_path)
 
 
 class SlackDriver:
-
     def __init__(self, _oauth_token, _user_token):
         self._oauth_token = _oauth_token  # api_token
         self._user_token = _user_token
@@ -120,6 +119,27 @@ class SlackDriver:
             'https://slack.com/api/chat.postMessage', params=data)
         print(r.text)
 
+    def read_presence(self, user):
+        params = {"token": self._user_token, "user":user}
+        r = requests.post('https://slack.com/api/users.getPresence',
+                          headers=self._headers, params=params)
+        # print(r.text)
+        return r.json()
+
+    def users_list(self):
+        params = {"token": self._user_token}
+        r = requests.post('	https://slack.com/api/users.list',
+                          headers=self._headers, params=params)
+
+        rjson = r.json()
+        # print(rjson)
+        presence_list = ''
+        for i in range(0, len(rjson["members"])):  # range(0, #of menbers)
+            # print(rjson["members"][i]["name"], rjson["members"][i]["id"])
+            presence = self.read_presence(rjson["members"][i]["id"])
+            presence_list += str(rjson["members"][i]["name"]) + ' is ' + str(presence["presence"]) + '\n'
+        self.send_message(presence_list,'#imactive-response')
+        # print(rjson["members"][2]["name"])
 
 def capture():
     cap = cv2.VideoCapture(0)
@@ -184,4 +204,4 @@ def detected_active(date):
 if __name__ == '__main__':
     slack = SlackDriver(slack_oauth_token, slack_user_token)
     # slack.send_button()
-    capture()
+    slack.users_list()
