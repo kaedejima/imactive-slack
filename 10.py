@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 import requests
 from datetime import date
 import json
+import time
+import pandas as pd
+import numpy as np
 
 from slack import WebClient
 
@@ -26,7 +29,6 @@ user_id = os.environ['USER_ID']
 face_detector = dlib.get_frontal_face_detector()
 predictor_path = 'shape_predictor_68_face_landmarks.dat'
 face_predictor = dlib.shape_predictor(predictor_path)
-
 
 class SlackDriver:
     def __init__(self, _oauth_token, _user_token):
@@ -133,13 +135,41 @@ class SlackDriver:
 
         rjson = r.json()
         # print(rjson)
-        presence_list = ''
+        # presence_str = ''
+        member_list = []
         for i in range(0, len(rjson["members"])):  # range(0, #of menbers)
-            # print(rjson["members"][i]["name"], rjson["members"][i]["id"])
-            presence = self.read_presence(rjson["members"][i]["id"])
-            presence_list += str(rjson["members"][i]["name"]) + ' is ' + str(presence["presence"]) + '\n'
-        self.send_message(presence_list,'#imactive-response')
-        # print(rjson["members"][2]["name"])
+            # print(rjson["members"][i]["id"])
+            member_list.append(rjson["members"][i]["id"])
+        return member_list
+        # #     presence = self.read_presence(rjson["members"][i]["id"])
+        # #     presence_str += str(rjson["members"][i]["name"]) + ' is ' + str(presence["presence"]) + '\n'
+        # # self.send_message(presence_str,'#imactive-response')
+        # for member_id in member_list:
+        #     res = self.read_presence(member_id)
+        #     print(res)
+
+    def track_presence(self, member_list):
+        start_time = time.time()
+        seconds = 3
+        col = ['Time']+member_list
+        df = pd.DataFrame(columns=col)
+        print(len(df))
+
+        while True:
+            current_time = time.time()
+            elapsed_time = current_time - start_time
+
+            if elapsed_time == seconds:
+                start_time = time.time()
+                res_list = [current_time]
+                for member_id in member_list:
+                    res_list.append(self.read_presence(member_id)['presence'])
+                    # print(res_list)
+                    # df.append(self.read_presence(member_id), ignore_index=True)
+                # print(len(res_list), df.columns)
+                df.loc[len(df)] = res_list
+                print(df)
+                print("Finished iterating in: " + str(int(elapsed_time)) + " seconds")
 
 def capture():
     cap = cv2.VideoCapture(0)
@@ -200,8 +230,11 @@ def detected_active(date):
         "Hello, you are here! [" + date + "]", "#imactive-response")
     slack.change_status('Hi, I am available!', ':thumbsup:')
 
+def create_object():
+    pass
 
 if __name__ == '__main__':
     slack = SlackDriver(slack_oauth_token, slack_user_token)
     # slack.send_button()
-    slack.users_list()
+    member_list = slack.users_list()
+    slack.track_presence(member_list)
