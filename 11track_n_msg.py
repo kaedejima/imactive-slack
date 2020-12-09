@@ -1,6 +1,6 @@
 # RUN FROM TERMINAL
 # cd Documents/Waseda3rdYear/ProjectResearchB/slack_api
-# python3 10.py
+# python3 11track_n_msg.py
 
 import cv2
 from datetime import datetime
@@ -15,6 +15,7 @@ import requests
 from datetime import date
 import json
 import time
+import datetime
 import pandas as pd
 import numpy as np
 
@@ -149,33 +150,46 @@ class SlackDriver:
         #     print(res)
 
     def track_presence(self, member_list):
-        start_time = time.time()
-        seconds = 4
-        col = ['Time']+member_list
-        df = pd.DataFrame(columns=col)
-        print(col)
-        tmp_flag = False
+      start_time = datetime.datetime.now()
+      print(start_time)
+      check_interval = 5
+      long_work_time = 10
+      col = ['Time']+member_list
+      df = pd.DataFrame(columns=col)
+      curr_dict = {s: {'status':'away', 'last_modified': start_time} for s in member_list}
+      print(col)
+      tmp_flag = False
 
-        while True:
-            current_time = time.time()
-            elapsed_time = current_time - start_time
-
-            if elapsed_time == seconds:
-                start_time = time.time()
-                res_list = [current_time]
-                for member_id in member_list:
-                    res_list.append(self.read_presence(member_id)['presence'])
-                    # print(res_list)
-                    # df.append(self.read_presence(member_id), ignore_index=True)
-                # print(len(res_list), df.columns)
-                df.loc[len(df)] = res_list
-                print(res_list)
-                # if (tmp_flag == False):
-                #     tmp_flag = True
-                #     print(df)
-                # else:
-                #     print(res_list)
-                # print(df)
+      while True:
+        current_time = datetime.datetime.now()
+        elapsed_time = current_time - start_time
+        print(elapsed_time)
+        # if elapsed_time > seconds:
+        start_time = datetime.datetime.now()
+        res_list = [current_time]
+        for member_id in member_list:
+            current_status = self.read_presence(member_id)['presence']
+            res_list.append(current_status)
+            # print((start_time - curr_dict[member_id]['last_modified']).seconds)
+            if (current_status == 'active') and ((start_time - curr_dict[member_id]['last_modified']).seconds > long_work_time):
+              print('active for long time...')
+              self.send_message(str(member_id) + 'Let\' take a break!', '#imactive-response')
+              curr_dict[member_id]['last_modified'] = start_time
+              pass
+            if(curr_dict[member_id]['status'] != current_status):
+                print('changed!')
+                curr_dict[member_id]['status'] = current_status
+                curr_dict[member_id]['last_modified'] = start_time
+        # print('reslist',res_list)
+        df.loc[len(df)] = res_list
+        # print(res_list)
+        # print(curr_dict)
+        print(df)
+        if len(df) > 11:
+            df = df.drop(df.index[[0]])
+            df.reset_index(drop=True,inplace=True)
+        time.sleep(check_interval)
+      return df
 
 def capture():
     cap = cv2.VideoCapture(0)
