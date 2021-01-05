@@ -1,6 +1,6 @@
 # RUN FROM TERMINAL
 # cd Documents/Waseda3rdYear/ProjectResearchB/slack_api
-# python3 11track_n_msg.py
+# python3 12dm_break.py
 
 import cv2
 from datetime import datetime
@@ -8,7 +8,7 @@ import dlib
 from imutils import face_utils
 import imutils
 
-import subprocess
+# import subprocess
 import os
 from dotenv import load_dotenv
 import requests
@@ -18,7 +18,7 @@ import time
 import datetime
 import pandas as pd
 import numpy as np
-import concurrent.futures
+# import concurrent.futures
 
 from slack import WebClient
 
@@ -264,8 +264,5 @@ if __name__ == '__main__':
     # slack.send_button()
     (id_list, name_list) = slack.users_list()
     # print(id_list)
-    slack.track_presence(id_list, name_list)
-    # executor = concurrent.futures.ProcessPoolExecutor(max_workers=2)
-    # executor.submit(slack.track_presence, id_list)
-    # executor.submit(capture)
+    # slack.track_presence(id_list, name_list)
     capture()
