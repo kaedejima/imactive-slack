@@ -26,6 +26,9 @@ face_detector = dlib.get_frontal_face_detector()
 predictor_path = 'shape_predictor_68_face_landmarks.dat'
 face_predictor = dlib.shape_predictor(predictor_path)
 
+away_emoji = ':hear_no_evil:'
+active_emoji = ':thumbsup:'
+
 def capture():
     cap = cv2.VideoCapture(0)
     # cap.set(4, 320)
@@ -63,7 +66,7 @@ def capture():
                 detected_active(date)
 
         # show window
-        cv2.imshow("Frame", frame)
+        # cv2.imshow("Frame", frame)
         key = cv2.waitKey(1)
         # EscKey closes the program
         if key == 27:
@@ -77,14 +80,16 @@ def capture():
 
 
 def detected_inactive(date):
-    SF.send_message(
-        "You are offline... [" + date + "]", "#imactive-response")
-    SF.change_status('I am offline...', ':hear_no_evil:')
+    SF.send_message("You are offline... [" + date + "]", "#imactive-response")
+    SF.change_status('away')
+    SF.change_status_message('I am offline...', away_emoji)
+
 
 
 def detected_active(date):
-    SF.send_message(
-        "Hello, you are here! [" + date + "]", "#imactive-response")
-    SF.change_status('Hi, I am available!', ':thumbsup:')
+    SF.send_message("Hello, you are here! [" + date + "]", "#imactive-response")
+    SF.change_status('auto')
+    SF.change_status_message('Hi, I am available!', active_emoji)
+
 
 capture()

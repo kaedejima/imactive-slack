@@ -22,8 +22,9 @@ SF = slack_funcs.SlackDriver()
 def track_presence():
   start_time = datetime.datetime.now()
   print(start_time)
-  check_interval = 5
-  long_work_time = 10
+  check_interval = 30
+  long_work_time = 1500
+  df_size = 11
   col = ['Time']+id_list
   df = pd.DataFrame(columns=col)
   curr_dict = {s: {'status':'away', 'last_modified': start_time} for s in id_list}
@@ -56,7 +57,7 @@ def track_presence():
     # print(res_list)
     # print(curr_dict)
     # print(df)
-    if len(df) > 11:
+    if len(df) > df_size:
         df = df.drop(df.index[[0]])
         df.reset_index(drop=True,inplace=True)
     time.sleep(check_interval)

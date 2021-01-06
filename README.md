@@ -1,4 +1,8 @@
 # Work efficient with your status and coffee!
+<img src="./source/portrait_title.png">
+<img src="./source/feat_1.png">
+<img src="./source/feat_2.png">
+
 <table>
   <tr>
     <td colspan=2>

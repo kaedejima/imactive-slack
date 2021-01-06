@@ -9,7 +9,7 @@ load_dotenv()
 
 slack_oauth_token = os.environ['SLACK_OAUTH_TOKEN']
 slack_user_token = os.environ['SLACK_USER_TOKEN']
-user_id = os.environ['USER_ID']
+# user_id = os.environ['USER_ID']
 
 class SlackDriver:
     def __init__(self):
@@ -24,7 +24,7 @@ class SlackDriver:
 
         # print(r.text)
 
-    def change_status(self, text, emoji):
+    def change_status_message(self, text, emoji):
         params = {
             "token": slack_oauth_token,
             # "user": user_id,
@@ -37,7 +37,18 @@ class SlackDriver:
 
         r = requests.post(
             'https://slack.com/api/users.profile.set', params=params)
-        # print(r.text)
+        print(r.text)
+
+    def change_status(self, status):
+        params = {
+            "token": slack_user_token,
+            "presence": status
+        }
+        print(params)
+
+        r = requests.post(
+            'https://slack.com/api/users.setPresence', params=params)
+        print(r.text)
 
     def send_button(self):
         callback_id = 'status_show_all'
