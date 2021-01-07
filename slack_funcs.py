@@ -37,18 +37,18 @@ class SlackDriver:
 
         r = requests.post(
             'https://slack.com/api/users.profile.set', params=params)
-        print(r.text)
+        # print(r.text)
 
     def change_status(self, status):
         params = {
             "token": slack_user_token,
             "presence": status
         }
-        print(params)
+        # print(params)
 
         r = requests.post(
             'https://slack.com/api/users.setPresence', params=params)
-        print(r.text)
+        # print(r.text)
 
     def send_button(self):
         callback_id = 'status_show_all'

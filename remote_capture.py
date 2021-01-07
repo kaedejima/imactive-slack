@@ -23,7 +23,7 @@ import slack_funcs
 SF = slack_funcs.SlackDriver()
 
 face_detector = dlib.get_frontal_face_detector()
-predictor_path = 'shape_predictor_68_face_landmarks.dat'
+predictor_path = './source/shape_predictor_68_face_landmarks.dat'
 face_predictor = dlib.shape_predictor(predictor_path)
 
 away_emoji = ':hear_no_evil:'
@@ -80,14 +80,14 @@ def capture():
 
 
 def detected_inactive(date):
-    SF.send_message("You are offline... [" + date + "]", "#imactive-response")
+    # SF.send_message("You are offline... [" + date + "]", "#imactive-response")
     SF.change_status('away')
     SF.change_status_message('I am offline...', away_emoji)
 
 
 
 def detected_active(date):
-    SF.send_message("Hello, you are here! [" + date + "]", "#imactive-response")
+    # SF.send_message("Hello, you are here! [" + date + "]", "#imactive-response")
     SF.change_status('auto')
     SF.change_status_message('Hi, I am available!', active_emoji)
 

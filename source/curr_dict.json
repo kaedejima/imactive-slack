@@ -1,4 +1,6 @@
-{'USLACKBOT': {'status': 'away',
+{
+  'USLACKBOT': {
+    'status': 'away',
     'last_modified': datetime.datetime(2020,
     12,
     9,
@@ -6,7 +8,8 @@
     21,
     10,
     906113)
-  }, 'UFP3UKJ2G': {'status': 'away', 'last_modified': datetime.datetime(2020,
+  },
+  'UFP3UKJ2G': {'status': 'away', 'last_modified': datetime.datetime(2020,
     12,
     9,
     21,
