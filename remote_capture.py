@@ -26,7 +26,7 @@ face_detector = dlib.get_frontal_face_detector()
 predictor_path = './source/shape_predictor_68_face_landmarks.dat'
 face_predictor = dlib.shape_predictor(predictor_path)
 
-away_emoji = ':hear_no_evil:'
+away_emoji = ':sweat_drops:'
 active_emoji = ':thumbsup:'
 
 def capture():
@@ -54,19 +54,19 @@ def capture():
         # print(date)
         if (det_str == 'rectangles[]'):
             no_face_for += 1
-            if no_face_for == 10:
+            if no_face_for == 30:
                 hello_for = 0
                 print('no face')
                 detected_inactive(date)
         else:
             hello_for += 1
-            if hello_for == 10:
+            if hello_for == 30:
                 no_face_for = 0
                 print('hello face')
                 detected_active(date)
 
         # show window
-        # cv2.imshow("Frame", frame)
+        cv2.imshow("Frame", frame)
         key = cv2.waitKey(1)
         # EscKey closes the program
         if key == 27:
@@ -75,21 +75,21 @@ def capture():
         n += 1
 
     cap.release()
-    SF.change_status('', '')
+    SF.change_status_message('', '')
     cv2.destroyAllWindows()
 
 
 def detected_inactive(date):
     # SF.send_message("You are offline... [" + date + "]", "#imactive-response")
     SF.change_status('away')
-    SF.change_status_message('I am offline...', away_emoji)
+    SF.change_status_message("I'm away...", away_emoji)
 
 
 
 def detected_active(date):
     # SF.send_message("Hello, you are here! [" + date + "]", "#imactive-response")
     SF.change_status('auto')
-    SF.change_status_message('Hi, I am available!', active_emoji)
+    SF.change_status_message("Hi, I'm available!", active_emoji)
 
 
 capture()

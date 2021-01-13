@@ -41,7 +41,7 @@ class SlackDriver:
 
     def change_status(self, status):
         params = {
-            "token": slack_user_token,
+            "token": slack_oauth_token,
             "presence": status
         }
         # print(params)
@@ -131,3 +131,38 @@ class SlackDriver:
             id_list.append(rjson["members"][i]["id"])
             name_list.append(rjson["members"][i]["profile"]["display_name"])
         return id_list, name_list
+
+    def delete_message(self, channel, time_stamp):
+        params = {
+            "token": slack_oauth_token,
+            # "user": user_id,
+            "channel": channel,
+            "ts": time_stamp
+        }
+        # print(params)
+
+        r = requests.post(
+            'https://slack.com/api/users.profile.set', params=params)
+
+    def conversation_history(self, channel):
+        params = {
+            "token": slack_oauth_token,
+            # "user": user_id,
+            "channel": channel,
+            "limit": 5
+        }
+        print(params)
+
+        r = requests.post(
+            'https://slack.com/api/conversations.history', params=params)
+        print(r.json())
+
+    def conversation_list(self):
+        params = {
+            "token": slack_oauth_token,
+        }
+        print(params)
+
+        r = requests.post(
+            'https://slack.com/api/conversations.list', params=params)
+        print(r.json())

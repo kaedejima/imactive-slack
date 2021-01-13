@@ -20,8 +20,6 @@ SF = slack_funcs.SlackDriver()
 (id_list, name_list) = SF.users_list()
 id_and_name = dict(zip(id_list, name_list))
 
-SF.send_message('YEL: active for 10mins\n Kenta: active for 30mins', '#imactive-response')
-
 def track_presence():
   start_time = datetime.datetime.now()
   print(start_time)
@@ -80,4 +78,11 @@ def track_presence():
     time.sleep(check_interval)
   return df
 
-# track_presence()
+track_presence()
+
+# SF.send_message('YEL: active for 10mins', '#imactive-response')
+# SF.send_message("YEL, 25min session over! Let's take a break! :coffee:", '#imactive-response')
+# SF.send_message("YEL, 25min session over! Let's take a break! :coffee:", 'UFP3UKJ2G')
+# SF.conversation_history("#imactive-response")
+# SF.channel_history("#general")
+# SF.conversation_list()
