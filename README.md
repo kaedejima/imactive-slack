@@ -1,7 +1,7 @@
 # Work efficient with your status and coffee!
-<img src="./source/portrait_title.png">
-<img src="./source/feat_1.png">
-<img src="./source/feat_2.png">
+<img src="./image/portrait_title.png" width="70%">
+<img src="./image/feat_1.png" width="70%">
+<img src="./image/feat_2.png" width="70%">
 
 <table>
   <tr>
@@ -11,7 +11,7 @@
   </tr>
   <tr>
     <td>
-      <img src="./source/imactive-coffee.png">
+      <img src="./image/imactive-coffee.png">
     </td>
     <td width="80%">
       <li>The latest status of users will be visualized with the duration information.</li>
